@@ -68,7 +68,37 @@ chartdll        foursplit   header      layout      reswrap         tabbook
         * 関数レベルでリンクする
             * `はい(/Gy)`
 
+#### 参考(マクロ `HAVE_VSSCANF;HAVE_STRTOLL;HAVE_STRTOULL;`)
+
+今落としてくるVS2017だと以下が実装されていて、実体が衝突するので、FOX側を無効化する。
+
+```
+#ifndef HAVE_VSSCANF
+
+// API
+extern "C" int vfscanf(FILE *stream, const char *format, va_list arg_ptr);
+
+// API
+extern "C" int vscanf(const char *format, va_list arg_ptr);
+
+// API
+extern "C" int vsscanf(const char* str, const char* format, va_list arg_ptr);
+```
+
+```
+#ifndef HAVE_STRTOLL
+extern "C" FXlong strtoll(const char *nptr, char **endptr, int base);
+#endif
+
+
+#ifndef HAVE_STRTOULL
+extern "C" FXulong strtoull(const char *nptr, char **endptr, int base);
+#endif
+```
+
 ### 3.2 Build
+
+プロジェクトのみを選択してビルド。
 
 * 出力先
     * `C:¥Users¥nabeshin¥source¥fox-1.6.57¥lib¥FOX-1.6.lib`
@@ -115,12 +145,10 @@ chartdll        foursplit   header      layout      reswrap         tabbook
 
 ### 4.2 Build
 
+プロジェクトのみを選択してビルド。
+
 * 出力先
     * `C:¥Users¥nabeshin¥source¥fox-1.6.57¥windows¥vcpp¥Debug`
-
-### 4.3 Execute
-
-exe を指定して実行。
 
 ```
 button.exe
@@ -131,9 +159,20 @@ layout.exe
 splitter.exe
 ```
 
+### 4.3 Execute
+
+対象のプロジェクトを `スタートアッププロジェクトに指定` してから実行。
+
+各種サンプルのGUIが表示される。
+
+OSSなので手厚い解説ドキュメントは無いが、これらのサンプルを操作しながらコードを読んで使い方を覚えるスタイルのようである。
+
+
 ## 5. コンソールアプリからの呼び出し
 
 ### 5.1 プロジェクトの設定
+
+FOX.lib を外部から取り込んで、イチからアプリを実装するケース。
 
 * 新規プロジェクト作成で `コンソールアプリ` を作成。
 * プロジェクトの設定で、以下を追加。
